@@ -60,7 +60,7 @@ Jarvis.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, s
 Jarvis.prototype.intentHandlers = {
     // register custom intent handlers
     "ShowingPassingYardsIntent": function (intent, session, response) {
-        console.log("FB started");
+        console.log("ShowingPassingYardsIntent started");
         /****/
         var repromptText = null;
         var sessionAttributes = {};
@@ -87,7 +87,7 @@ Jarvis.prototype.intentHandlers = {
         });
     },
      "HideStatisticIntent": function (intent, session, response) {
-        console.log("FB started");
+        console.log("HideStatisticIntent started");
         var repromptText = null;
         var sessionAttributes = {};
         var shouldEndSession = true;
@@ -113,10 +113,83 @@ Jarvis.prototype.intentHandlers = {
         });
         /****/
     },
-    "AMAZON.HelpIntent": function (intent, session, response) {
+      "ShowingRushingYardsIntent": function (intent, session, response){
+        console.log("ShowingRushingYardsIntent started");
+        var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW RUSHING YARDS STATISTIC"};
+        standardResponse(payload, getPositiveConfirmation(), response);
+    },
+      "ShowingReceivingYardsIntent": function (intent, session, response){
+        console.log("ShowingReceivingYardsIntent started");
+        var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW RECEIVING YARDS STATISTIC"};
+        standardResponse(payload, getPositiveConfirmation(), response);
+    },
+      "ShowingTacklesIntent": function (intent, session, response){
+        console.log("ShowingTacklesIntent started");
+        var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW TACKLES STATISTIC"};
+        standardResponse(payload, getPositiveConfirmation(), response);
+    },
+      "ShowingSacksIntent": function (intent, session, response){
+        console.log("ShowingSacksIntent started");
+        var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW SACKS STATISTIC"};
+        standardResponse(payload, getPositiveConfirmation(), response);
+    },
+      "ShowingInterceptionIntent": function (intent, session, response){
+        console.log("ShowingInterceptionIntent started");
+        var payloadObj= {"receiver": "VOICE_FOOTBALL", "command": "SHOW INTERCEPTIONS STATISTIC"};
+        standardResponse(payload, getPositiveConfirmation(), response);
+    },
+      "NflColorOnIntent": function (intent, session, response){
+        console.log("NflColorOnIntent started");
+        var payload = {"receiver": "VOICE_FOOTBALL", "command": "COLOR ON"};
+        standardResponse(payload, getPositiveConfirmation(), response);
+    },
+      "NflColorOffIntent": function (intent, session, response){
+        console.log("NflColorOffIntent started");
+        var payload = {"receiver": "VOICE_FOOTBALL", "command": "COLOR OFF"};
+        standardResponse(payload, getPositiveConfirmation(), response);
+    },
+      "NflShowHelmetsIntent": function (intent, session, response){
+        console.log("NflShowHelmetsIntent started");
+        var payloadObj= {"receiver": "VOICE_FOOTBALL", "command": "SHOW HELMETS"};
+        standardResponse(payload, getPositiveConfirmation(), response);
+    },
+      "NflShowLogosIntent": function (intent, session, response){
+        console.log("NflShowLogosIntent started");
+        var payload= {"receiver": "VOICE_FOOTBALL", "command": "SHOW LOGOS"};
+        standardResponse(payload, getPositiveConfirmation(), response);
+    },
+      "TagesschauIntent": function (intent, session, response){
+        console.log("StartTagesschauIntent started");
+        var payload = {"receiver": "PODCAST", "command": "START_PODCAST"};
+        standardResponse(payload, getPositiveConfirmation(), response);
+    },
+      "AMAZON.HelpIntent": function (intent, session, response) {
         response.ask(randomText(HELP_TEXT));
     }
 };
+
+function standardResponse(payload, speechOutput, response) {
+
+  var repromptText = null;
+  var sessionAttributes = {};
+  var shouldEndSession = true;
+  var paramsUpdate = {
+      topic:"/pi",
+      payload: JSON.stringify(payload),
+      qos:0
+  };
+  iotData.publish(paramsUpdate, function(err, data) {
+    if (err){
+      //Handle the error here
+      console.log("MQTT Error" + data);
+    }
+    else {
+      speechOutput = getPositiveConfirmation();
+      console.log(data);
+      response.tell(speechOutput);
+    }
+  });
+}
 
 function randomText(stringArray) {
 
