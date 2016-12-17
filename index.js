@@ -1,10 +1,7 @@
 /**
     Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
     Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
-
         http://aws.amazon.com/apache2.0/
-
     or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
 
@@ -163,6 +160,16 @@ Jarvis.prototype.intentHandlers = {
         var payload = {"receiver": "PODCAST", "command": "START_PODCAST"};
         standardResponse(payload, getPositiveConfirmation(), response);
     },
+        "TvOffIntent": function (intent, session, response){
+        console.log("TvOnOffIntent started");
+        var payload = getTVcommand("1");
+        standardResponse(payload, "Of Course, turning off tv right now!", response);
+    },
+        "TvOnIntent": function (intent, session, response){
+        console.log("TvOnOffIntent started");
+        var payload = {"receiver": "LGTV", "command": "ON"};
+        standardResponse(payload, "Sure, turning on the tv now!", response);
+    },
       "AMAZON.HelpIntent": function (intent, session, response) {
         response.ask(randomText(HELP_TEXT));
     }
@@ -184,7 +191,6 @@ function standardResponse(payload, speechOutput, response) {
       console.log("MQTT Error" + data);
     }
     else {
-      speechOutput = getPositiveConfirmation();
       console.log(data);
       response.tell(speechOutput);
     }
@@ -200,6 +206,22 @@ function randomText(stringArray) {
 
 function getPositiveConfirmation(){
   return randomText(POSITIVE_CONFIRMATIONS);
+}
+
+function getTVcommand(command){
+    return {"receiver": "LGTV", "command": command};
+// 27	Kanal nach oben
+//28	Kanal nach unten
+//24	Lauter
+//25	Leiser
+//26	Ton an/aus
+//34	Wiedergabe pausieren
+//33	Wiedergabe fortsetzen
+//1	TV ausschalten
+//23	Zurück-Taste
+//20	OK-Taste
+//403	vorheriger Kanal
+//35	Wiedergabe stoppen
 }
 
 // Create the handler that responds to the Alexa Request.
