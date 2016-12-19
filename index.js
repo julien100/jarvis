@@ -171,6 +171,28 @@ Jarvis.prototype.intentHandlers = {
         var payload = {"receiver": "LGTV", "command": "ON"};
         standardResponse(payload, "Sure, turning on the tv now!", response);
     },
+        "HideMirrorModuleIntent": function (intent, session, response, locale){
+        console.log("HideMirrorModuleIntent started");
+        var mirrorModule = intent.slots.MirrorModule.value
+        var payload = {"receiver": "MQTT-SERVICE", "command": "HIDE_MODULE", "value": mirrorModule};
+        standardResponse(payload,getPositiveConfirmation(locale) , response);
+    },
+        "ShowMirrorModuleIntent": function (intent, session, response, locale){
+        console.log("HideMirrorModuleIntent started");
+        var mirrorModule = intent.slots.MirrorModule.value
+        var payload = {"receiver": "MQTT-SERVICE", "command": "SHOW_MODULE", "value": mirrorModule};
+        standardResponse(payload,getPositiveConfirmation(locale) , response);
+    },
+        "WakeUpIntent": function (intent, session, response, locale){
+        console.log("WakeUpIntent started");
+        var payload = {"receiver": "MQTT-SERVICE", "command": "WAKE_UP"};
+        standardResponse(payload,getPositiveConfirmation(locale) , response);
+    },
+        "GoToSleepIntent": function (intent, session, response, locale){
+        console.log("GoToSleepIntent started");
+        var payload = {"receiver": "MQTT-SERVICE", "command": "GO_TO_SLEEP"};
+        standardResponse(payload,getPositiveConfirmation(locale) , response);
+    },
       "AMAZON.HelpIntent": function (intent, session, response, locale) {
         response.ask(randomText(HELP_TEXT));
     }
