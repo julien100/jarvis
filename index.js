@@ -11,7 +11,8 @@
 var APP_ID = "amzn1.ask.skill.e4019df7-07b4-4cb0-ade4-90ab666dcaec"; //replace with "amzn1.ask.skill.e4019df7-07b4-4cb0-ade4-90ab666dcaec";
 const SHOW_PASSING_YARDS = ["Showing NFL passing yards statistic now. Is Russel Wilson leading again?",
                             "Sure. How is Tom Brady doing?"];
-const POSITIVE_CONFIRMATIONS = ["Sure!", "Of Course!", "Coming right away!"];
+const POSITIVE_CONFIRMATIONS_EN = ["Sure!", "Of Course!", "Coming right away!"];
+const POSITIVE_CONFIRMATIONS_DE = ["Ja!", "Klar!", "Natürlich!"];
 const HELP_TEXT = ["I am Jarvis and I am happy to help you to make your life easier!"];
 
 /*****/
@@ -56,7 +57,7 @@ Jarvis.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, s
 
 Jarvis.prototype.intentHandlers = {
     // register custom intent handlers
-    "ShowingPassingYardsIntent": function (intent, session, response) {
+    "ShowingPassingYardsIntent": function (intent, session, response, locale) {
         console.log("ShowingPassingYardsIntent started");
         /****/
         var repromptText = null;
@@ -83,7 +84,7 @@ Jarvis.prototype.intentHandlers = {
           }
         });
     },
-     "HideStatisticIntent": function (intent, session, response) {
+     "HideStatisticIntent": function (intent, session, response, locale) {
         console.log("HideStatisticIntent started");
         var repromptText = null;
         var sessionAttributes = {};
@@ -110,67 +111,67 @@ Jarvis.prototype.intentHandlers = {
         });
         /****/
     },
-      "ShowingRushingYardsIntent": function (intent, session, response){
+      "ShowingRushingYardsIntent": function (intent, session, response, locale){
         console.log("ShowingRushingYardsIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW RUSHING YARDS STATISTIC"};
-        standardResponse(payload, getPositiveConfirmation(), response);
+        standardResponse(payload, getPositiveConfirmation(locale), response);
     },
-      "ShowingReceivingYardsIntent": function (intent, session, response){
+      "ShowingReceivingYardsIntent": function (intent, session, response, locale){
         console.log("ShowingReceivingYardsIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW RECEIVING YARDS STATISTIC"};
-        standardResponse(payload, getPositiveConfirmation(), response);
+        standardResponse(payload, getPositiveConfirmation(locale), response);
     },
-      "ShowingTacklesIntent": function (intent, session, response){
+      "ShowingTacklesIntent": function (intent, session, response, locale){
         console.log("ShowingTacklesIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW TACKLES STATISTIC"};
-        standardResponse(payload, getPositiveConfirmation(), response);
+        standardResponse(payload, getPositiveConfirmation(locale), response);
     },
-      "ShowingSacksIntent": function (intent, session, response){
+      "ShowingSacksIntent": function (intent, session, response, locale){
         console.log("ShowingSacksIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW SACKS STATISTIC"};
-        standardResponse(payload, getPositiveConfirmation(), response);
+        standardResponse(payload, getPositiveConfirmation(locale), response);
     },
-      "ShowingInterceptionIntent": function (intent, session, response){
+      "ShowingInterceptionIntent": function (intent, session, response, locale){
         console.log("ShowingInterceptionIntent started");
         var payloadObj= {"receiver": "VOICE_FOOTBALL", "command": "SHOW INTERCEPTIONS STATISTIC"};
-        standardResponse(payload, getPositiveConfirmation(), response);
+        standardResponse(payload, getPositiveConfirmation(locale), response);
     },
-      "NflColorOnIntent": function (intent, session, response){
+      "NflColorOnIntent": function (intent, session, response, locale){
         console.log("NflColorOnIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "COLOR ON"};
-        standardResponse(payload, getPositiveConfirmation(), response);
+        standardResponse(payload, getPositiveConfirmation(locale), response);
     },
-      "NflColorOffIntent": function (intent, session, response){
+      "NflColorOffIntent": function (intent, session, response, locale){
         console.log("NflColorOffIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "COLOR OFF"};
-        standardResponse(payload, getPositiveConfirmation(), response);
+        standardResponse(payload, getPositiveConfirmation(locale), response);
     },
-      "NflShowHelmetsIntent": function (intent, session, response){
+      "NflShowHelmetsIntent": function (intent, session, response, locale){
         console.log("NflShowHelmetsIntent started");
         var payloadObj= {"receiver": "VOICE_FOOTBALL", "command": "SHOW HELMETS"};
-        standardResponse(payload, getPositiveConfirmation(), response);
+        standardResponse(payload, getPositiveConfirmation(locale), response);
     },
-      "NflShowLogosIntent": function (intent, session, response){
+      "NflShowLogosIntent": function (intent, session, response, locale){
         console.log("NflShowLogosIntent started");
         var payload= {"receiver": "VOICE_FOOTBALL", "command": "SHOW LOGOS"};
-        standardResponse(payload, getPositiveConfirmation(), response);
+        standardResponse(payload, getPositiveConfirmation(locale), response);
     },
-      "TagesschauIntent": function (intent, session, response){
+      "TagesschauIntent": function (intent, session, response, locale){
         console.log("StartTagesschauIntent started");
         var payload = {"receiver": "PODCAST", "command": "START_PODCAST"};
-        standardResponse(payload, getPositiveConfirmation(), response);
+        standardResponse(payload, getPositiveConfirmation(locale), response);
     },
-        "TvOffIntent": function (intent, session, response){
+        "TvOffIntent": function (intent, session, response, locale){
         console.log("TvOnOffIntent started");
         var payload = getTVcommand("1");
         standardResponse(payload, "Of Course, turning off tv right now!", response);
     },
-        "TvOnIntent": function (intent, session, response){
+        "TvOnIntent": function (intent, session, response, locale){
         console.log("TvOnOffIntent started");
         var payload = {"receiver": "LGTV", "command": "ON"};
         standardResponse(payload, "Sure, turning on the tv now!", response);
     },
-      "AMAZON.HelpIntent": function (intent, session, response) {
+      "AMAZON.HelpIntent": function (intent, session, response, locale) {
         response.ask(randomText(HELP_TEXT));
     }
 };
@@ -204,8 +205,16 @@ function randomText(stringArray) {
   return stringArray[randomIndex];
 }
 
-function getPositiveConfirmation(){
-  return randomText(POSITIVE_CONFIRMATIONS);
+function getPositiveConfirmation(locale){
+  if (locale === 'en-US') {
+    return randomText(POSITIVE_CONFIRMATIONS_EN);
+  } else if (locale === 'en-GB') {
+    return randomText(POSITIVE_CONFIRMATIONS_EN);
+  } else if (locale === 'de-DE') {
+    return randomText(POSITIVE_CONFIRMATIONS_DE);
+  } else {
+    return randomText(POSITIVE_CONFIRMATIONS_EN);
+  }
 }
 
 function getTVcommand(command){
