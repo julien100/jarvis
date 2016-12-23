@@ -15,6 +15,29 @@ const POSITIVE_CONFIRMATIONS_EN = ["Sure!", "Of Course!", "Coming right away!"];
 const POSITIVE_CONFIRMATIONS_DE = ["Ja!", "Klar!", "Natürlich!"];
 const HELP_TEXT = ["I am Jarvis and I am happy to help you to make your life easier!"];
 
+const TRANSLATIONS = {
+  EN: {
+    POSITIVE_CONFIRMATION: ["Sure!", "Of Course!", "Coming right away!"],
+    SHOW_PASSING_YARDS: ["Showing NFL passing yards statistic now. Is Russel Wilson leading again?",
+                         "Sure. How is Tom Brady doing?"],
+    HELP_TEXT: ["I am Jarvis and I am happy to help you to make your life easier!"],
+    TV_ON: ["Sure, turning on the tv now!"],
+    TV_OFF: ["Of Course, turning off tv right now!"],
+    GOOD_MORNING: ["Good Morning Julien. Have a nice day."]
+  },
+  DE: {
+    POSITIVE_CONFIRMATION: ["Ja!", "Klar!", "Natürlich!"],
+    SHOW_PASSING_YARDS: ["Zeige dir die Passing Yards sofort. Ist Russel Wilson wieder vorne?",
+                         "Klar. Wie macht sich Tom Brady?"],
+    HELP_TEXT: ["Ich bin Jarvis und möchte dir gerne dein Leben so einfach wie möglich machen!"],
+    TV_ON: ["Ich schalte den Fernseher sofort ein!"],
+    TV_OFF: ["Natürlich, ich schalte den Fernseher aus"],
+    GOOD_MORNING: ["Guten Morgen Julien. Ich wünsche dir einen schönen Tag."]
+
+  }
+};
+
+
 /*****/
 //Environment Configuration
 var config = {};
@@ -59,141 +82,110 @@ Jarvis.prototype.intentHandlers = {
     // register custom intent handlers
     "ShowingPassingYardsIntent": function (intent, session, response, locale) {
         console.log("ShowingPassingYardsIntent started");
-        /****/
-        var repromptText = null;
-        var sessionAttributes = {};
-        var shouldEndSession = true;
-        var speechOutput = "";
-        var payloadObj = {"receiver": "VOICE_FOOTBALL", "command": "SHOW PASSING YARDS STATISTIC"}; //On
-        //Prepare the parameters of the update call
-        var paramsUpdate = {
-            topic:"/pi",
-            payload: JSON.stringify(payloadObj),
-            qos:0
-        };
-        iotData.publish(paramsUpdate, function(err, data) {
-          if (err){
-            //Handle the error here
-            console.log("MQTT Error" + data);
-          }
-          else {
-            speechOutput = randomText(SHOW_PASSING_YARDS);
-            console.log(data);
-            response.tell(speechOutput);
-            //callback(sessionAttributes,buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
-          }
-        });
+        var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW PASSING YARDS STATISTIC"};
+        standardResponse(payload, randomText("SHOW_PASSING_YARDS", getLanguage(locale)), response);
     },
      "HideStatisticIntent": function (intent, session, response, locale) {
         console.log("HideStatisticIntent started");
-        var repromptText = null;
-        var sessionAttributes = {};
-        var shouldEndSession = true;
-        var speechOutput = "";
-        //Set the pump to 0 for activation on the device
-        var payloadObj= {"receiver": "VOICE_FOOTBALL", "command": "HIDE STATISTIC"}; //off
-         var paramsUpdate = {
-            topic:"/pi",
-            payload: JSON.stringify(payloadObj),
-            qos:0
-        };
-        iotData.publish(paramsUpdate, function(err, data) {
-          if (err){
-            //Handle the error here
-            console.log("MQTT Error" + data);
-          }
-          else {
-            speechOutput = getPositiveConfirmation();
-            console.log(data);
-            response.tell(speechOutput);
-            //callback(sessionAttributes,buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
-          }
-        });
-        /****/
+        var payload= {"receiver": "VOICE_FOOTBALL", "command": "HIDE STATISTIC"};
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
       "ShowingRushingYardsIntent": function (intent, session, response, locale){
         console.log("ShowingRushingYardsIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW RUSHING YARDS STATISTIC"};
-        standardResponse(payload, getPositiveConfirmation(locale), response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
       "ShowingReceivingYardsIntent": function (intent, session, response, locale){
         console.log("ShowingReceivingYardsIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW RECEIVING YARDS STATISTIC"};
-        standardResponse(payload, getPositiveConfirmation(locale), response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
       "ShowingTacklesIntent": function (intent, session, response, locale){
         console.log("ShowingTacklesIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW TACKLES STATISTIC"};
-        standardResponse(payload, getPositiveConfirmation(locale), response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
       "ShowingSacksIntent": function (intent, session, response, locale){
         console.log("ShowingSacksIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "SHOW SACKS STATISTIC"};
-        standardResponse(payload, getPositiveConfirmation(locale), response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
       "ShowingInterceptionIntent": function (intent, session, response, locale){
         console.log("ShowingInterceptionIntent started");
         var payloadObj= {"receiver": "VOICE_FOOTBALL", "command": "SHOW INTERCEPTIONS STATISTIC"};
-        standardResponse(payload, getPositiveConfirmation(locale), response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
       "NflColorOnIntent": function (intent, session, response, locale){
         console.log("NflColorOnIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "COLOR ON"};
-        standardResponse(payload, getPositiveConfirmation(locale), response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
       "NflColorOffIntent": function (intent, session, response, locale){
         console.log("NflColorOffIntent started");
         var payload = {"receiver": "VOICE_FOOTBALL", "command": "COLOR OFF"};
-        standardResponse(payload, getPositiveConfirmation(locale), response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
       "NflShowHelmetsIntent": function (intent, session, response, locale){
         console.log("NflShowHelmetsIntent started");
         var payloadObj= {"receiver": "VOICE_FOOTBALL", "command": "SHOW HELMETS"};
-        standardResponse(payload, getPositiveConfirmation(locale), response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
       "NflShowLogosIntent": function (intent, session, response, locale){
         console.log("NflShowLogosIntent started");
         var payload= {"receiver": "VOICE_FOOTBALL", "command": "SHOW LOGOS"};
-        standardResponse(payload, getPositiveConfirmation(locale), response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
       "TagesschauIntent": function (intent, session, response, locale){
         console.log("StartTagesschauIntent started");
         var payload = {"receiver": "PODCAST", "command": "START_PODCAST"};
-        standardResponse(payload, getPositiveConfirmation(locale), response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
         "TvOffIntent": function (intent, session, response, locale){
         console.log("TvOnOffIntent started");
         var payload = getTVcommand("1");
-        standardResponse(payload, "Of Course, turning off tv right now!", response);
+        standardResponse(payload, randomText("TV_OFF", getLanguage(locale)), response);
     },
         "TvOnIntent": function (intent, session, response, locale){
         console.log("TvOnOffIntent started");
         var payload = {"receiver": "LGTV", "command": "ON"};
-        standardResponse(payload, "Sure, turning on the tv now!", response);
+        standardResponse(payload, randomText("TV_ON", getLanguage(locale)), response);
     },
         "HideMirrorModuleIntent": function (intent, session, response, locale){
         console.log("HideMirrorModuleIntent started");
-        var mirrorModule = intent.slots.MirrorModule.value
+        var mirrorModule = intent.slots.MirrorModule.value;
         var payload = {"receiver": "MQTT-SERVICE", "command": "HIDE_MODULE", "value": mirrorModule};
-        standardResponse(payload,getPositiveConfirmation(locale) , response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
         "ShowMirrorModuleIntent": function (intent, session, response, locale){
         console.log("HideMirrorModuleIntent started");
-        var mirrorModule = intent.slots.MirrorModule.value
+        var mirrorModule = intent.slots.MirrorModule.value;
         var payload = {"receiver": "MQTT-SERVICE", "command": "SHOW_MODULE", "value": mirrorModule};
-        standardResponse(payload,getPositiveConfirmation(locale) , response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
         "WakeUpIntent": function (intent, session, response, locale){
         console.log("WakeUpIntent started");
         var payload = {"receiver": "MQTT-SERVICE", "command": "WAKE_UP"};
-        standardResponse(payload,getPositiveConfirmation(locale) , response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
         "GoToSleepIntent": function (intent, session, response, locale){
         console.log("GoToSleepIntent started");
         var payload = {"receiver": "MQTT-SERVICE", "command": "GO_TO_SLEEP"};
-        standardResponse(payload,getPositiveConfirmation(locale) , response);
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
     },
-      "AMAZON.HelpIntent": function (intent, session, response, locale) {
+        "SmartDeviceIntent": function (intent, session, response, locale){
+        console.log("SmartDeviceIntent started");
+        var device = intent.slots.Device.value;
+        var state = intent.slots.State.value;
+        var payload = {"receiver": "FHEM", "device": device, "state": state};
+        standardResponse(payload, randomText("POSITIVE_CONFIRMATION", getLanguage(locale)), response);
+    },
+        "HouseStateIntent": function (intent, session, response, locale){
+        console.log("HouseStateIntent started");
+        var houseState = intent.slots.HouseState.value;
+        var payload = {"receiver": "FHEM", "device": "house", "state": houseState};
+        standardResponse(payload, randomText("GOOD_MORNING", getLanguage(locale)), response);
+    },
+       "AMAZON.HelpIntent": function (intent, session, response, locale) {
         response.ask(randomText(HELP_TEXT));
     }
 };
@@ -220,11 +212,21 @@ function standardResponse(payload, speechOutput, response) {
   });
 }
 
-function randomText(stringArray) {
 
-  var randomIndex = Math.floor(Math.random() * stringArray.length);
+function getLanguage(locale) {
+  if (locale === 'en-US') {
+    return 'EN';
+  } else if (locale === 'en-GB') {
+    return 'EN';
+  } else if (locale === 'de-DE') {
+    return 'DE';
+  }
+}
 
-  return stringArray[randomIndex];
+function randomText(text, language) {
+    var stringArray = TRANSLATIONS[language][text];
+    var randomIndex = Math.floor(Math.random() * stringArray.length);
+    return stringArray[randomIndex];
 }
 
 function getPositiveConfirmation(locale){
